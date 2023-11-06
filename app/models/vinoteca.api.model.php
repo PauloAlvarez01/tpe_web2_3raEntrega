@@ -1,6 +1,6 @@
 <?php
 
-require_once 'app/models/model.php';
+require_once 'app/models/api.model.php';
 
 class VinotecaModel extends Model {
 
