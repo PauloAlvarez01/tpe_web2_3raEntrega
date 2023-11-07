@@ -2,18 +2,18 @@
     require_once 'config.php';
     require_once 'libs/router.php';
 
-    require_once 'app/controllers/task.api.controller.php';
+    require_once 'app/controllers/vinoteca.api.controller.php';
 
     $router = new Router();
 
-    #                 endpoint      verbo     controller           método
-    $router->addRoute('tareas',     'GET',    'TaskApiController', 'get'   );
-    $router->addRoute('tareas',     'POST',   'TaskApiController', 'create');
-    $router->addRoute('tareas/:ID', 'GET',    'TaskApiController', 'get'   );
-    $router->addRoute('tareas/:ID', 'PUT',    'TaskApiController', 'update');
-    $router->addRoute('tareas/:ID', 'DELETE', 'TaskApiController', 'delete');
+    #                 endpoint        verbo     controller               método
+    $router->addRoute('vinoteca',     'GET',    'VinotecaApiController', 'get'   );
+    $router->addRoute('vinoteca',     'POST',   'VinotecaApiController', 'create');
+    $router->addRoute('vinoteca/:ID', 'GET',    'VinotecaApiController', 'get'   );
+    $router->addRoute('vinoteca/:ID', 'PUT',    'VinotecaApiController', 'update');
+    $router->addRoute('vinoteca/:ID', 'DELETE', 'VinotecaApiController', 'delete');
     
-    $router->addRoute('tareas/:ID/:subrecurso', 'GET',    'TaskApiController', 'get'   );
+    $router->addRoute('vinoteca/:ID/:subrecurso', 'GET',    'VinotecaApiController', 'get'   );
     
 
     $router->route($_GET['resource'], $_SERVER['REQUEST_METHOD']);
