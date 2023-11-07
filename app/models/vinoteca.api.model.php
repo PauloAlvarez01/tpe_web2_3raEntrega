@@ -5,6 +5,7 @@ require_once 'app/models/api.model.php';
 
 class VinotecaModel extends Model {
 
+    //se usa para api
     public function getVinos() {
         $query = $this->db->prepare('SELECT a.ID_VINO, a.Nombre, a.Tipo, a.Azucar, b.Nombre_cepa, c.Nombre_bodega FROM `vino` a INNER JOIN `cepa` b ON a.id_cepa = b.id_cepa INNER JOIN `bodega` c ON a.id_bodega = c.id_bodega' );
         $query->execute();
@@ -13,6 +14,7 @@ class VinotecaModel extends Model {
         return $vinos;
     }
 
+    //se usa para api
     public function getVino($id) {
         $query= $this->db->prepare('SELECT a.ID_VINO, a.Nombre, a.Tipo, a.Azucar, b.Nombre_cepa, c.Nombre_bodega FROM `vino` a INNER JOIN `cepa` b ON a.id_cepa = b.id_cepa INNER JOIN `bodega` c ON a.id_bodega = c.id_bodega  WHERE `ID_vino` = ?');
         $query->execute([$id]);
@@ -84,6 +86,7 @@ class VinotecaModel extends Model {
         $query->execute([$Nombre_cepa, $Aroma, $Maridaje, $Textura, $id]);
     }
 
+    //se usa para api
     public function deleteVino($id){
         $query = $this->db->prepare('DELETE FROM `vino` WHERE ID_vino = ?');
         $query->execute([$id]);
