@@ -24,6 +24,10 @@
                     $parametro['sort']=$_GET ['sort'];
                     $parametro['order']=$_GET ['order'];
                     $vinos = $this->model->getVinosPorCriterioOrdenado($parametro);
+                }else if (isset ($_GET ['page']) && is_numeric($_GET ['page'])) {
+                    $parametro=$_GET ['page'];
+                    $vinos = $this->model->getVinosPage($parametro);
+                
                 }else{
                     $vinos = $this->model->getVinos();
                 }
@@ -33,29 +37,13 @@
                 if(!empty($vino) && empty($params[':subrecurso'])) {
                     $this->view->response($vino, 200);
                 }else if(!empty($vino)){
-                    switch ($params[':subrecurso']) {
-                        case 'Nombre':
-                            $this->view->response($vino->Nombre, 200);
-                            break;
-                        case 'Tipo':
-                            $this->view->response($vino->Tipo, 200);
-                            break;
-                        case 'Azucar':
-                            $this->view->response($vino->Azucar, 200);
-                            break;
-                        case 'Nombre_cepa':
-                            $this->view->response($vino->Nombre_cepa, 200);
-                            break;
-                        case 'Nombre_bodega':
-                            $this->view->response($vino->Nombre_bodega, 200);
-                            break;
-                        default:
-                        $this->view->response(
-                            'El vino no contiene '.$params[':subrecurso'].'.'
-                            , 404);
-                            break;
+                    $subrecurso = $params[':subrecurso'];
+                    if (isset($vino->$subrecurso)) {
+                        $this->view->response($vino->$subrecurso, 200);
+                    } else {
+                        $this->view->response("Subrecurso no existe", 404);
                     }
-                } else {
+                } else {    
                     $this->view->response(
                         'El vino con el id='.$params[':ID'].' no existe.', 404);
                 }
@@ -76,30 +64,35 @@
 
         function create($params = []) {
             $body = $this->getData();
- 
-            $titulo = $body->titulo;
-            $descripcion = $body->descripcion;
-            $prioridad = $body->prioridad;
 
-            $id = $this->model->insertTask($titulo, $descripcion, $prioridad);
+            $Nombre = $body->Nombre;
+            $Tipo = $body->Tipo;
+            $Azucar = $body->Azucar;
+            $id_bodega = $body->id_bodega;
+            $id_cepa = $body->id_cepa;
 
-            $this->view->response('La tarea fue insertada con el id='.$id, 201);
+            $id = $this->model->insertVino($Nombre, $Tipo, $Azucar, $id_bodega, $id_cepa);
+
+            $this->view->response('El vino fue insertado con el id='.$id, 201);
         }
 
         function update($params = []) {
             $id = $params[':ID'];
-            $tarea = $this->model->getTask($id);
+            $vino = $this->model->getVino($id);
 
-            if($tarea) {
+            if($vino) {
                 $body = $this->getData();
-                $titulo = $body->titulo;
-                $descripcion = $body->descripcion;
-                $prioridad = $body->prioridad;
-                $this->model->updateTaskData($id, $titulo, $descripcion, $prioridad);
 
-                $this->view->response('La tarea con id='.$id.' ha sido modificada.', 200);
+                $Nombre = $body->Nombre;
+                $Tipo = $body->Tipo;
+                $Azucar = $body->Azucar;
+                $id_bodega = $body->id_bodega;
+                $id_cepa = $body->id_cepa;
+                $this->model->updateVino($Nombre, $Tipo, $Azucar, $id_bodega, $id_cepa, $id);
+
+                $this->view->response('El vino con id='.$id.' ha sido modificado.', 200);
             } else {
-                $this->view->response('La tarea con id='.$id.' no existe.', 404);
+                $this->view->response('El vino con id='.$id.' no existe.', 404);
             }
         }
     }

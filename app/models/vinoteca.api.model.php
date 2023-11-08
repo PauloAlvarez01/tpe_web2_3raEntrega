@@ -7,7 +7,7 @@ class VinotecaModel extends Model {
 
     //se usa para api
     public function getVinos() {
-        $query = $this->db->prepare('SELECT a.ID_VINO, a.Nombre, a.Tipo, a.Azucar, b.Nombre_cepa, c.Nombre_bodega FROM `vino` a INNER JOIN `cepa` b ON a.id_cepa = b.id_cepa INNER JOIN `bodega` c ON a.id_bodega = c.id_bodega' );
+        $query = $this->db->prepare('SELECT ID_VINO, Nombre, Tipo, Azucar, Nombre_cepa, Nombre_bodega FROM `vino` a INNER JOIN `cepa` b ON a.id_cepa = b.id_cepa INNER JOIN `bodega` c ON a.id_bodega = c.id_bodega' );
         $query->execute();
         $vinos = $query->fetchAll(PDO::FETCH_OBJ);
 
@@ -15,8 +15,40 @@ class VinotecaModel extends Model {
     }
 
     //se usa para api
+    public function getVinosPage($parametro) {
+        $cant = 10;
+        $offset= $cant * ($parametro-1);
+        $query = $this->db->prepare('SELECT ID_VINO, Nombre, Tipo, Azucar, Nombre_cepa, Nombre_bodega FROM `vino` a INNER JOIN `cepa` b ON a.id_cepa = b.id_cepa INNER JOIN `bodega` c ON a.id_bodega = c.id_bodega LIMIT '.$cant.' OFFSET '.$offset.' ' );
+        $query->execute();
+        $vinos = $query->fetchAll(PDO::FETCH_OBJ);
+
+        return $vinos;
+    }
+
+    /*
+    public function getAll($paramsGet) {
+        $sql = 'SELECT a.ID_VINO, a.Nombre, a.Tipo, a.Azucar, b.Nombre_cepa, c.Nombre_bodega FROM `vino` a INNER JOIN `cepa` b ON a.id_cepa = b.id_cepa INNER JOIN `bodega` c ON a.id_bodega = c.id_bodega';
+        $ex = [];
+
+        if (isset($paramsGet['order'])) {
+            
+            $sql += " ORDER BY " + $paramsGet['order']; 
+        } 
+
+        if (isset($paramsGet['bodega'])) {
+            
+            $sql += " WHERE bodega = :bodega";
+            $ex[] =  ['bodega' => $paramsGet['bodega']];
+        } 
+
+
+        $where = ['bodega', 'cepa', 'nombre'];
+    }
+    */
+
+    //se usa para api
     public function getVino($id) {
-        $query= $this->db->prepare('SELECT a.ID_VINO, a.Nombre, a.Tipo, a.Azucar, b.Nombre_cepa, c.Nombre_bodega FROM `vino` a INNER JOIN `cepa` b ON a.id_cepa = b.id_cepa INNER JOIN `bodega` c ON a.id_bodega = c.id_bodega  WHERE `ID_vino` = ?');
+        $query= $this->db->prepare('SELECT ID_VINO, Nombre, Tipo, Azucar, Nombre_cepa, Nombre_bodega FROM `vino` a INNER JOIN `cepa` b ON a.id_cepa = b.id_cepa INNER JOIN `bodega` c ON a.id_bodega = c.id_bodega  WHERE `ID_vino` = ?');
         $query->execute([$id]);
         $vino= $query->fetch(PDO::FETCH_OBJ);
 
@@ -64,6 +96,7 @@ class VinotecaModel extends Model {
 
         return $bodegas;
     }
+    
 
     public function getCepa($id) {
         $query= $this->db->prepare('SELECT * FROM `cepa`  WHERE `id_cepa` = ?');
@@ -97,6 +130,7 @@ class VinotecaModel extends Model {
         return $vinos;
     }
 
+    //se usa para api
     public function updateVino($Nombre, $Tipo, $Azucar, $id_bodega, $id_cepa, $id) {    
         $query = $this->db->prepare('UPDATE `vino` SET Nombre=?, Tipo=?, Azucar=?, id_cepa=?, id_bodega =? WHERE ID_vino = ?');
         $query->execute([$Nombre, $Tipo, $Azucar, $id_bodega, $id_cepa, $id]);
@@ -128,6 +162,7 @@ class VinotecaModel extends Model {
         $query->execute([$id]);
     }
 
+    // se usa para api
     public function insertVino($Nombre, $Tipo, $Azucar, $id_bodega, $id_cepa){
         $query = $this->db->prepare('INSERT INTO `vino` (Nombre, Tipo, Azucar, id_bodega, id_cepa) VALUES(?,?,?,?,?)');
         $query->execute([$Nombre, $Tipo, $Azucar, $id_bodega, $id_cepa]);
