@@ -22,7 +22,33 @@ class VinotecaModel extends Model {
 
         return $vino;
     }
-            
+
+    //se usa para api
+    public function getVinosPorBodega($bodega) {
+        $query = $this->db->prepare('SELECT a.ID_VINO, a.Nombre, a.Tipo, a.Azucar, b.Nombre_cepa, c.Nombre_bodega FROM `vino` a INNER JOIN `cepa` b ON a.id_cepa = b.id_cepa INNER JOIN `bodega` c ON a.id_bodega = c.id_bodega WHERE Nombre_bodega = ?' );
+        $query->execute([$bodega]);
+        $vinos = $query->fetchAll(PDO::FETCH_OBJ);
+
+        return $vinos;
+    }
+
+    //se usa para api
+    public function getVinosPorCepa($cepa) {
+        $query = $this->db->prepare('SELECT a.ID_VINO, a.Nombre, a.Tipo, a.Azucar, b.Nombre_cepa, c.Nombre_bodega FROM `vino` a INNER JOIN `cepa` b ON a.id_cepa = b.id_cepa INNER JOIN `bodega` c ON a.id_bodega = c.id_bodega WHERE Nombre_cepa = ?' );
+        $query->execute([$cepa]);
+        $vinos = $query->fetchAll(PDO::FETCH_OBJ);
+
+        return $vinos;
+    }
+
+    //se usa para api
+    public function getVinosPorCriterioOrdenado($parametro) {
+        $query = $this->db->prepare('SELECT a.ID_VINO, a.Nombre, a.Tipo, a.Azucar, b.Nombre_cepa, c.Nombre_bodega FROM `vino` a INNER JOIN `cepa` b ON a.id_cepa = b.id_cepa INNER JOIN `bodega` c ON a.id_bodega = c.id_bodega ORDER BY ' .$parametro['sort']. ' ' .$parametro['order']. '');
+        $query->execute();
+        $vinos = $query->fetchAll(PDO::FETCH_OBJ);
+
+        return $vinos;
+    }            
     public function getBodega($id) {
         $query= $this->db->prepare('SELECT * FROM `bodega`  WHERE `id_bodega` = ?');
         $query->execute([$id]);
@@ -55,7 +81,7 @@ class VinotecaModel extends Model {
         return $cepas;
     }
 
-    public function getVinosPorBodega($id) {
+    public function getVinosPorBodegaID($id) {
         $query= $this->db->prepare('SELECT a.*, b.id_cepa, b.Nombre_cepa FROM `vino` a INNER JOIN `cepa` b ON a.id_cepa = b.id_cepa  WHERE a.id_bodega = ?');
         $query->execute([$id]);
         $vinos= $query->fetchAll(PDO::FETCH_OBJ);
@@ -63,7 +89,7 @@ class VinotecaModel extends Model {
         return $vinos;
     }
 
-    public function getVinosPorCepa($id) {
+    public function getVinosPorCepaID($id) {
         $query= $this->db->prepare('SELECT a.*, b.id_bodega, b.Nombre_bodega FROM `vino` a INNER JOIN `bodega` b ON a.id_bodega = b.id_bodega  WHERE a.id_cepa = ?');
         $query->execute([$id]);
         $vinos= $query->fetchAll(PDO::FETCH_OBJ);

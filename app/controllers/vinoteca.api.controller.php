@@ -13,7 +13,20 @@
 
         function get($params = []) {
             if (empty($params)){
-                $vinos = $this->model->getVinos();
+                $parametro=[];
+                if (isset ($_GET ['bodega'])){
+                    $parametro=$_GET ['bodega'];
+                    $vinos = $this->model->getVinosPorBodega($parametro);
+                }else if (isset ($_GET ['cepa'])){
+                    $parametro=$_GET ['cepa'];
+                    $vinos = $this->model->getVinosPorCepa($parametro);
+                }else if (isset ($_GET ['sort']) && isset ($_GET ['order'])){
+                    $parametro['sort']=$_GET ['sort'];
+                    $parametro['order']=$_GET ['order'];
+                    $vinos = $this->model->getVinosPorCriterioOrdenado($parametro);
+                }else{
+                    $vinos = $this->model->getVinos();
+                }
                 $this->view->response($vinos, 200);
             } else {
                 $vino = $this->model->getVino($params[':ID']);
@@ -21,19 +34,19 @@
                     $this->view->response($vino, 200);
                 }else if(!empty($vino)){
                     switch ($params[':subrecurso']) {
-                        case 'nombre':
+                        case 'Nombre':
                             $this->view->response($vino->Nombre, 200);
                             break;
-                        case 'tipo':
+                        case 'Tipo':
                             $this->view->response($vino->Tipo, 200);
                             break;
-                        case 'azucar':
+                        case 'Azucar':
                             $this->view->response($vino->Azucar, 200);
                             break;
-                        case 'cepa':
+                        case 'Nombre_cepa':
                             $this->view->response($vino->Nombre_cepa, 200);
                             break;
-                        case 'bodega':
+                        case 'Nombre_bodega':
                             $this->view->response($vino->Nombre_bodega, 200);
                             break;
                         default:
@@ -63,7 +76,7 @@
 
         function create($params = []) {
             $body = $this->getData();
-
+ 
             $titulo = $body->titulo;
             $descripcion = $body->descripcion;
             $prioridad = $body->prioridad;
