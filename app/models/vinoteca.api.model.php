@@ -25,26 +25,70 @@ class VinotecaModel extends Model {
         return $vinos;
     }
 
-    /*
-    public function getAll($paramsGet) {
-        $sql = 'SELECT a.ID_VINO, a.Nombre, a.Tipo, a.Azucar, b.Nombre_cepa, c.Nombre_bodega FROM `vino` a INNER JOIN `cepa` b ON a.id_cepa = b.id_cepa INNER JOIN `bodega` c ON a.id_bodega = c.id_bodega';
-        $ex = [];
+    /*SELECT Columna1, Columna2 .....
+    FROM tabla
+    WHERE condición
+    ORDER BY Columna [ ASC | DESC ]
+    LIMIT número_filas  
+    OFFSET valor_desplazamiento;*/
 
-        if (isset($paramsGet['order'])) {
-            
-            $sql += " ORDER BY " + $paramsGet['order']; 
-        } 
-
-        if (isset($paramsGet['bodega'])) {
+    /*if (isset($paramsGet['bodega'])) {
             
             $sql += " WHERE bodega = :bodega";
             $ex[] =  ['bodega' => $paramsGet['bodega']];
         } 
 
 
-        $where = ['bodega', 'cepa', 'nombre'];
+        $where = ['bodega', 'cepa', 'nombre'];*/
+    
+    public function getAll($paramsGet) {
+        $sql = 'SELECT ID_VINO, Nombre, Tipo, Azucar, Nombre_cepa, Nombre_bodega FROM `vino` a INNER JOIN `cepa` b ON a.id_cepa = b.id_cepa INNER JOIN `bodega` c ON a.id_bodega = c.id_bodega';
+        $ex=" ";
+
+        if (isset($paramsGet['Nombre_bodega'])) {
+            
+            $sql .= ' WHERE Nombre_bodega = ?';
+            $ex = $paramsGet['Nombre_bodega'];
+
+            if (isset($paramsGet['Nombre_cepa'])) {
+            
+                $sql .= ' AND Nombre_cepa = ?';
+                $ex .= ', '.$paramsGet['Nombre_cepa'];
+
+            }
+
+        } else if (isset($paramsGet['Nombre_cepa'])) {
+            
+            $sql .= ' WHERE Nombre_cepa = ?';
+            $ex = $paramsGet['Nombre_cepa'];
+        }
+
+        
+        if (isset($paramsGet['sort'])) {
+            $sql .= ' ORDER BY '  .$paramsGet['sort']; 
+
+            if (isset($paramsGet['order'])) {
+                $sql .= " ".$paramsGet['order'];
+            }
+        }
+
+        if (isset($paramsGet['page'])){
+            $cant = 10;
+            $offset= $cant * ($paramsGet['page']-1);
+            $sql .= ' LIMIT '.$cant .' OFFSET '.$offset;
+        }
+        
+        $query = $this->db->prepare($sql);
+        $query->execute([$ex]);
+        $vinos = $query->fetchAll(PDO::FETCH_OBJ);
+
+        return $vinos;
+        
+        
+
+        
     }
-    */
+    
 
     //se usa para api
     public function getVino($id) {
@@ -76,38 +120,42 @@ class VinotecaModel extends Model {
     //se usa para api
     public function getVinosPorCriterioOrdenado($parametro) {
         $query = $this->db->prepare('SELECT a.ID_VINO, a.Nombre, a.Tipo, a.Azucar, b.Nombre_cepa, c.Nombre_bodega FROM `vino` a INNER JOIN `cepa` b ON a.id_cepa = b.id_cepa INNER JOIN `bodega` c ON a.id_bodega = c.id_bodega ORDER BY ' .$parametro['sort']. ' ' .$parametro['order']. '');
-        $query->execute();
+        $query->execute($ex[]);
         $vinos = $query->fetchAll(PDO::FETCH_OBJ);
 
         return $vinos;
-    }            
-    public function getBodega($id) {
-        $query= $this->db->prepare('SELECT * FROM `bodega`  WHERE `id_bodega` = ?');
-        $query->execute([$id]);
+    } 
+    
+    // se usa en api
+    public function getBodega($bodega) {
+        $query= $this->db->prepare('SELECT * FROM `bodega`  WHERE `Nombre_bodega` = ?');
+        $query->execute([$bodega]);
         $bodega= $query->fetch(PDO::FETCH_OBJ);
 
         return $bodega;
     }
 
+    
     public function getBodegas() {
-        $query= $this->db->prepare('SELECT id_bodega, Nombre_bodega FROM `bodega`');
+        $query= $this->db->prepare('SELECT Nombre_bodega FROM `bodega`');
         $query->execute();
         $bodegas= $query->fetchAll(PDO::FETCH_OBJ);
 
         return $bodegas;
     }
     
-
-    public function getCepa($id) {
-        $query= $this->db->prepare('SELECT * FROM `cepa`  WHERE `id_cepa` = ?');
-        $query->execute([$id]);
+    // se usa en api
+    public function getCepa($cepa) {
+        $query= $this->db->prepare('SELECT * FROM `cepa`  WHERE `Nombre_cepa` = ?');
+        $query->execute([$cepa]);
         $cepa= $query->fetch(PDO::FETCH_OBJ);
 
         return $cepa;
     }
 
+    
     public function getCepas() {
-        $query= $this->db->prepare('SELECT id_cepa, Nombre_cepa FROM `cepa`');
+        $query= $this->db->prepare('SELECT Nombre_cepa FROM `cepa`');
         $query->execute();
         $cepas= $query->fetchAll(PDO::FETCH_OBJ);
 

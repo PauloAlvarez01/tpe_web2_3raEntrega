@@ -7,7 +7,7 @@
     $router = new Router();
 
     #                 endpoint        verbo     controller               método
-    $router->addRoute('vinoteca',     'GET',    'VinotecaApiController', 'get'   );
+    $router->addRoute('vinoteca',     'GET',    'VinotecaApiController', 'get2'   );
     $router->addRoute('vinoteca',     'POST',   'VinotecaApiController', 'create');
     $router->addRoute('vinoteca/:ID', 'GET',    'VinotecaApiController', 'get'   );
     $router->addRoute('vinoteca/:ID', 'PUT',    'VinotecaApiController', 'update');

@@ -44,8 +44,55 @@
                         $this->view->response("Subrecurso no existe", 404);
                     }
                 } else {    
-                    $this->view->response(
-                        'El vino con el id='.$params[':ID'].' no existe.', 404);
+                    $this->view->response('El vino con el id='.$params[':ID'].' no existe.', 404);
+                }
+            }
+        }
+
+        function get2($params = []) {
+            if (empty($params)){
+                $paramsGet=[];
+                if (isset($_GET['Nombre_bodega'])){
+                    $bodega=$this->model->getBodega($_GET['Nombre_bodega']);
+                    if($bodega){
+                        $paramsGet['Nombre_bodega'] = $_GET['Nombre_bodega'];
+                    }else{
+                        $this->view->response("La bodega ingresada no existe", 404);
+                        return;
+                    }
+                }
+                if (isset($_GET['Nombre_cepa'])){
+                    $cepa=$this->model->getCepa($_GET['Nombre_cepa']);
+                    if($cepa){
+                        $paramsGet['Nombre_cepa'] = $_GET['Nombre_cepa'];
+                    }else{
+                        $this->view->response("La cepa ingresada no existe", 404);
+                        return;
+                    }
+                }
+                //if (isset ($_GET ['sort'])) && ($_GET ['sort']) == 
+
+
+                
+                    
+                
+                
+                
+                $vinos = $this->model->getAll($paramsGet);
+                $this->view->response($vinos, 200);
+            } else {
+                $vino = $this->model->getVino($params[':ID']);
+                if(!empty($vino) && empty($params[':subrecurso'])) {
+                    $this->view->response($vino, 200);
+                }else if(!empty($vino)){
+                    $subrecurso = $params[':subrecurso'];
+                    if (isset($vino->$subrecurso)) {
+                        $this->view->response($vino->$subrecurso, 200);
+                    } else {
+                        $this->view->response("Subrecurso no existe", 404);
+                    }
+                } else {    
+                    $this->view->response('El vino con el id='.$params[':ID'].' no existe.', 404);
                 }
             }
         }
