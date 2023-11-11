@@ -13,44 +13,6 @@
 
         function get($params = []) {
             if (empty($params)){
-                $parametro=[];
-                if (isset ($_GET ['bodega'])){
-                    $parametro=$_GET ['bodega'];
-                    $vinos = $this->model->getVinosPorBodega($parametro);
-                }else if (isset ($_GET ['cepa'])){
-                    $parametro=$_GET ['cepa'];
-                    $vinos = $this->model->getVinosPorCepa($parametro);
-                }else if (isset ($_GET ['sort']) && isset ($_GET ['order'])){
-                    $parametro['sort']=$_GET ['sort'];
-                    $parametro['order']=$_GET ['order'];
-                    $vinos = $this->model->getVinosPorCriterioOrdenado($parametro);
-                }else if (isset ($_GET ['page']) && is_numeric($_GET ['page'])) {
-                    $parametro=$_GET ['page'];
-                    $vinos = $this->model->getVinosPage($parametro);
-                
-                }else{
-                    $vinos = $this->model->getVinos();
-                }
-                $this->view->response($vinos, 200);
-            } else {
-                $vino = $this->model->getVino($params[':ID']);
-                if(!empty($vino) && empty($params[':subrecurso'])) {
-                    $this->view->response($vino, 200);
-                }else if(!empty($vino)){
-                    $subrecurso = $params[':subrecurso'];
-                    if (isset($vino->$subrecurso)) {
-                        $this->view->response($vino->$subrecurso, 200);
-                    } else {
-                        $this->view->response("Subrecurso no existe", 404);
-                    }
-                } else {    
-                    $this->view->response('El vino con el id='.$params[':ID'].' no existe.', 404);
-                }
-            }
-        }
-
-        function get2($params = []) {
-            if (empty($params)){
                 $paramsGet=[];
                 if (isset($_GET['Nombre_bodega'])){
                     $bodega=$this->model->getBodega($_GET['Nombre_bodega']);
@@ -70,14 +32,36 @@
                         return;
                     }
                 }
-                //if (isset ($_GET ['sort'])) && ($_GET ['sort']) == 
-
-
-                
-                    
-                
-                
-                
+                if (isset ($_GET ['sort'])){
+                    $columnas = $this->model->getColumnName();
+                    $tituloValido=false;
+                    foreach ($columnas as $columna){
+                        if ($_GET ['sort'] == $columna->column_name){
+                            $paramsGet['sort'] = $_GET['sort'];
+                            $tituloValido=true;
+                        }
+                    }
+                    if ($tituloValido==false){
+                        $this->view->response("El título ingresado no existe", 404);
+                        return;
+                    }
+                }
+                if (isset ($_GET ['order'])){
+                    if ($_GET ['order']=="asc"||$_GET ['order']=="desc"){
+                        $paramsGet['order'] = $_GET['order'];
+                    }else{
+                        $this->view->response("Criterio de ordenamiento no válido (utilice: asc ó desc)", 404);
+                        return;
+                    }
+                }
+                if (isset ($_GET ['page'])){
+                    if (is_numeric($_GET ['page']) && $_GET ['page'] >=1){
+                        $paramsGet['page'] = $_GET['page'];
+                    }else{
+                        $this->view->response("Ingrese un número de página válido", 404);
+                        return;
+                    }
+                }
                 $vinos = $this->model->getAll($paramsGet);
                 $this->view->response($vinos, 200);
             } else {
