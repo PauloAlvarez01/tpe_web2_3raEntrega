@@ -6,23 +6,23 @@ require_once 'app/models/api.model.php';
 class VinotecaModel extends Model {
 
     public function getAll($paramsGet) {
+
         $sql = 'SELECT ID_vino, Nombre, Tipo, Azucar, Nombre_cepa, Nombre_bodega FROM `vino` a INNER JOIN `cepa` b ON a.id_cepa = b.id_cepa INNER JOIN `bodega` c ON a.id_bodega = c.id_bodega';
         $ex=[];
+        
         if (isset($paramsGet['Nombre_bodega'])) {
             $sql .= ' WHERE Nombre_bodega = ?';
             $ex[] = $paramsGet['Nombre_bodega'];
-            if (isset($paramsGet['Nombre_cepa'])) {
-                $sql .= ' AND Nombre_cepa = ?';
-                $ex[] = $paramsGet['Nombre_cepa'];
-            }
+                if (isset($paramsGet['Nombre_cepa'])) {
+                    $sql .= ' AND Nombre_cepa = ?';
+                    $ex[] = $paramsGet['Nombre_cepa'];
+                }
             }else if (isset($paramsGet['Nombre_cepa'])) {
-            
-            $sql .= ' WHERE Nombre_cepa = ?';
-            $ex[] = $paramsGet['Nombre_cepa'];
+                $sql .= ' WHERE Nombre_cepa = ?';
+                $ex[] = $paramsGet['Nombre_cepa'];
             }
         if (isset($paramsGet['sort'])) {
             $sql .= ' ORDER BY '  .$paramsGet['sort']; 
-
             if (isset($paramsGet['order'])) {
                 $sql .= " ".$paramsGet['order'];
             }
@@ -64,6 +64,22 @@ class VinotecaModel extends Model {
     public function getCepa($cepa) {
         $query= $this->db->prepare('SELECT * FROM `cepa`  WHERE `Nombre_cepa` = ?');
         $query->execute([$cepa]);
+        $cepa= $query->fetch(PDO::FETCH_OBJ);
+
+        return $cepa;
+    }
+
+    public function getBodegaById($id) {
+        $query= $this->db->prepare('SELECT * FROM `bodega`  WHERE `id_bodega` = ?');
+        $query->execute([$id]);
+        $bodega= $query->fetch(PDO::FETCH_OBJ);
+
+        return $bodega;
+    }
+    
+    public function getCepaById($id) {
+        $query= $this->db->prepare('SELECT * FROM `cepa`  WHERE `id_cepa` = ?');
+        $query->execute([$id]);
         $cepa= $query->fetch(PDO::FETCH_OBJ);
 
         return $cepa;

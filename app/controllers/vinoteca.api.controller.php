@@ -102,6 +102,17 @@
             $id_bodega = $body->id_bodega;
             $id_cepa = $body->id_cepa;
 
+            $bodega=$this->model->getBodegaById($id_bodega);
+            if(!$bodega){
+                $this->view->response('El id_bodega ' .$id_bodega. ' no existe', 404);
+                return;
+            }
+            $cepa=$this->model->getCepaById($id_cepa);
+            if(!$cepa){
+                $this->view->response('El id_cepa ' .$id_cepa. ' no existe', 404);
+                return;
+            }
+
             $id = $this->model->insertVino($Nombre, $Tipo, $Azucar, $id_bodega, $id_cepa);
 
             $this->view->response('El vino fue insertado con el id='.$id, 201);
@@ -119,6 +130,18 @@
                 $Azucar = $body->Azucar;
                 $id_bodega = $body->id_bodega;
                 $id_cepa = $body->id_cepa;
+
+                $bodega=$this->model->getBodegaById($id_bodega);
+                if(!$bodega){
+                    $this->view->response('El id_bodega ' .$id_bodega. ' no existe', 404);
+                    return;
+                }
+                $cepa=$this->model->getCepaById($id_cepa);
+                if(!$cepa){
+                    $this->view->response('El id_cepa ' .$id_cepa. ' no existe', 404);
+                    return;
+                }
+
                 $this->model->updateVino($Nombre, $Tipo, $Azucar, $id_bodega, $id_cepa, $id);
 
                 $this->view->response('El vino con id='.$id.' ha sido modificado.', 200);
