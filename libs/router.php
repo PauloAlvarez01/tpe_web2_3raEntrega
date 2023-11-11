@@ -27,7 +27,7 @@ class Route {
             if($part[0] != ":"){
                 if($part != $partsURL[$key])
                 return false;
-            } //es un parametro
+            } 
             else
             $this->params[$part] = $partsURL[$key];
         }
