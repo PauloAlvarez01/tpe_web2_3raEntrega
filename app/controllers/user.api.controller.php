@@ -34,12 +34,11 @@
             $userdata = [$usuario, password_verify($pass, $usuario->password)];
             
             if ($usuario && password_verify($pass, $usuario->password)) { 
-                if ($user && password_verify($pass, $usuario->password)){
                 $token = $this->authHelper->createToken($userdata);
                 $this->view->response($token);
             } else {
                 $this->view->response('El usuario o contraseña son incorrectos.', 401);
             }
-        }
+        
     }
 }
