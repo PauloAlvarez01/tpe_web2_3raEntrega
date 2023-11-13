@@ -54,7 +54,6 @@
  -/api/vinoteca/2 --> METODO PUT Para modificar un vino tambien se require un Token. Por ello se debe ir a Authorization, Type Bearer Token, pegar el Token obtenido, y luego ir al body para poder agregar un vino. La forma de modificar es colocar en el body lo siguiente:
 
                 {
-                    "ID_vino": 2,
                     "Nombre": "FEDERICO LÓPEZ GRAN RESERVA",
                     "Tipo": "Vino blanco",
                     "Azucar": "dulce",
