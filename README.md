@@ -22,6 +22,8 @@ Descripción Endpoints:
 
  -/api/vinoteca/?page=1 --> METODO GET lista los primeros 10 vinos (ej: page=1);
 
+ -- Aclaración: Se pueden combinar cualquiera de las opciones anteriores. --
+
  Obtener un vino por ID:
 
  -/api/vinoteca/2 --> METODO GET obtiene un vino (ej: vino con ID_vino= 2);
@@ -29,8 +31,6 @@ Descripción Endpoints:
  Obtener cualquiera de sus subrecursos:
 
  -/api/vinoteca/1/Nombre --> METODO GET obtiene el subrecurso de un vino (ej: el nombre del vino ID_vino= 1);
-
- -- Aclaración: Se pueden combinar cualquiera de las opciones anteriores. --
 
  Autenticación:
 
