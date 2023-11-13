@@ -35,7 +35,7 @@
 ```
  + **Autenticación:**
 ```
- -/api/user/token--> METODO GET Este enpoint permite que el usuario se loguee a través de Basic Auth. El Username es "webadmin", y Password es "admin". Al ingresar se obtiene el token. Este Token es necesario para modificar vinos (PUT) y agregar vinos (POST). 
+ -/api/user/token --> METODO GET Este enpoint permite que el usuario se loguee a través de Basic Auth. El Username es "webadmin", y Password es "admin". Al ingresar se obtiene el token. Este Token es necesario para modificar vinos (PUT) y agregar vinos (POST). 
 ```
  + **Agregar un vino (requiere autorización):**
 ``` 
