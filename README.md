@@ -1,7 +1,4 @@
 # tpe_web2_3raEntrega
-<<<<<<< HEAD
-
-
 
 Descripción Endpoints:
 
@@ -33,7 +30,7 @@ Descripción Endpoints:
 
  -/api/vinoteca/1/Nombre --> METODO GET obtiene el subrecurso de un vino (ej: el nombre del vino ID_vino= 1);
 
- -- Aclaración: Se pueden combinar calquiera de las opciones anteriores. --
+ -- Aclaración: Se pueden combinar cualquiera de las opciones anteriores. --
 
  Autenticación:
 
